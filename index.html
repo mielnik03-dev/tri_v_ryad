@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html>
 <html lang="ru">
 <head>
@@ -42,7 +41,7 @@
     background: var(--bg);
     color: var(--ink);
     font-family: var(--font-body);
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.45;
     padding-inline: 16px;
     padding-block: 20px 32px;
@@ -65,7 +64,7 @@
   .modebtn:hover { border-color: var(--ink); }
   .modebtn:focus-visible, .col:focus-visible { outline: 3px solid var(--p0); outline-offset: 2px; }
 
-  .players { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+  .players { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .chip {
     display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; align-items: center;
     padding: 8px 10px; border-radius: 10px; background: var(--surface); border: 1.5px solid var(--line); min-width: 0;
@@ -73,9 +72,9 @@
   .chip.cur { border-color: var(--pc); box-shadow: 0 0 0 1px var(--pc); }
   .chip.out { opacity: .6; }
   .chip svg { grid-row: span 2; }
-  .chip .nm { font-weight: 600; font-size: .92rem; min-width: 0; overflow-wrap: anywhere; }
+  .chip .nm { font-weight: 600; font-size: .92rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .chip .sc { font-family: var(--font-display); font-weight: 700; font-size: 1rem; font-variant-numeric: tabular-nums; grid-row: span 2; }
-  .chip .tg { font-size: .72rem; color: var(--muted); min-height: 1em; }
+  .chip .tg { font-size: .72rem; color: var(--muted); min-height: 1em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .frame { display: grid; grid-template-columns: 1.5rem 1fr; grid-template-rows: 1.5rem auto; width: 100%; }
   .lab { font-family: var(--font-display); font-size: .68rem; color: var(--muted); display: grid; place-items: center; font-variant-numeric: tabular-nums; }
@@ -105,10 +104,10 @@
   .tray { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
   .dice { display: flex; gap: 10px; }
   .die {
-    width: 56px; height: 56px; border-radius: 12px; background: var(--surface); border: 1.5px solid var(--line);
-    display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); padding: 9px; place-items: center;
+    width: 3.5rem; height: 3.5rem; border-radius: 12px; background: var(--surface); border: 1.5px solid var(--line);
+    display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); padding: .55rem; place-items: center;
   }
-  .die i { width: 100%; height: 100%; max-width: 11px; max-height: 11px; border-radius: 50%; background: var(--ink); display: block; }
+  .die i { width: 100%; height: 100%; max-width: .7rem; max-height: .7rem; border-radius: 50%; background: var(--ink); display: block; }
   .die.tumble { animation: tumble .14s linear infinite; }
   .info { flex: 1 1 140px; min-width: 0; }
   .turn { font-family: var(--font-display); font-weight: 500; font-size: .95rem; margin: 0; }
@@ -169,6 +168,88 @@
   @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes tumble { 0% { transform: rotate(-8deg); } 50% { transform: rotate(8deg) translateY(-2px); } 100% { transform: rotate(-8deg); } }
   @media (prefers-reduced-motion: reduce) { .cell .pop, .die.tumble { animation: none; } }
+
+  /* --- names, checkboxes, button row --- */
+  .txt { font: inherit; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 12px; min-width: 0; flex: 1 1 10rem; max-width: 100%; }
+  .txt:focus-visible { outline: 3px solid var(--p0); outline-offset: 1px; }
+  .seatrow .seatname { flex-basis: 100%; }
+  .chk { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; width: 100%; font-size: .92rem; }
+  .chk input { width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--ink); flex: none; }
+  .btns { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  /* --- last move ring and vanishing pieces --- */
+  .cell.lm::before { content: ""; position: absolute; inset: 2px; border: 3px solid var(--mc); border-radius: 6px; pointer-events: none; z-index: 1; animation: ring 1.1s ease-out; }
+  .cell.lmd::before { border-style: dashed; }
+  .cell .vanish { animation: vanish .9s ease-in forwards; }
+
+  /* --- score table --- */
+  .scorebox { background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; min-width: 0; }
+  .scorebox h3 { margin: 0; font-family: var(--font-display); font-size: .95rem; }
+  .scorebox .sm { margin: 0; color: var(--muted); font-size: .85rem; }
+  .sbody { max-height: 17rem; overflow: auto; }
+  .stab { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+  .stab th, .stab td { padding: 5px 2px; text-align: center; border-bottom: 1px solid var(--line); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .stab th:first-child { width: 3.2rem; text-align: left; color: var(--muted); font-weight: 500; padding-left: 4px; }
+  .stab thead th { font-weight: 600; font-size: .74rem; vertical-align: bottom; position: sticky; top: 0; background: var(--surface); }
+  .stab thead svg { display: block; margin: 0 auto 2px; }
+  .stab tfoot th, .stab tfoot td { font-weight: 700; border-bottom: 0; border-top: 2px solid var(--ink); position: sticky; bottom: 0; background: var(--surface); }
+  .stab tfoot th { color: var(--ink); }
+  .stab td.lead { background: color-mix(in srgb, var(--pc) 24%, var(--surface)); }
+  .stab tr.cur td { color: var(--muted); }
+
+  /* --- full-screen banner --- */
+  .banner { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(8, 14, 18, .8); animation: fade .2s ease-out; }
+  .bcard {
+    width: min(100%, 540px); max-height: 100%; overflow: auto; background: var(--surface); color: var(--ink); text-align: center;
+    border: 2px solid var(--pc); border-radius: 20px; box-shadow: 0 0 0 6px color-mix(in srgb, var(--pc) 35%, transparent);
+    padding: 26px 20px 20px; display: grid; gap: 10px; justify-items: center; animation: rise .3s cubic-bezier(.2, .9, .3, 1.2);
+  }
+  .bshape { display: flex; gap: 8px; justify-content: center; }
+  .bshape svg { animation: bob 1.2s ease-in-out infinite; }
+  .bk { margin: 0; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: .85rem; color: var(--muted); }
+  .bname { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 7vw, 3rem); line-height: 1.1; overflow-wrap: anywhere; text-wrap: balance; }
+  .bsub { margin: 0; font-size: 1.05rem; }
+  .bh { margin: 8px 0 0; width: 100%; text-align: left; font-weight: 600; font-size: .85rem; color: var(--muted); }
+  .bres { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: 6px; text-align: left; }
+  .bres li { display: grid; grid-template-columns: 1.6rem 24px 1fr auto; gap: 10px; align-items: center; padding: 6px 10px; border: 1.5px solid var(--line); border-radius: 10px; }
+  .bres .rk { font-family: var(--font-display); font-weight: 700; color: var(--muted); }
+  .bres .rn { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bres .rp { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .bcard .btn { margin-top: 8px; }
+
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes rise { from { transform: translateY(24px) scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  @keyframes ring { from { transform: scale(1.25); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes vanish { from { transform: scale(1); opacity: 1; } to { transform: scale(.2); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .cell.lm::before, .cell .vanish, .banner, .bcard, .bshape svg { animation: none; }
+    .cell .vanish { opacity: 0; }
+  }
+
+  /* --- sizes: tablet column, desktop scale, desktop two-column game --- */
+  .app.gaming { max-width: 640px; }
+  @media (min-width: 880px) {
+    html { font-size: 18px; }
+    .app { max-width: 600px; }
+  }
+  @media (min-width: 760px) and (min-height: 520px) and (min-aspect-ratio: 5/4) {
+    .app.gaming { max-width: 1400px; }
+    #scr-game {
+      display: grid; column-gap: 32px; row-gap: 14px; align-items: start;
+      grid-template-columns: minmax(0, calc(100vh - 10.5rem)) minmax(300px, 1fr);
+      grid-template-columns: minmax(0, calc(100dvh - 10.5rem)) minmax(300px, 1fr);
+      grid-template-rows: repeat(5, auto) 1fr;
+      grid-template-areas: "board players" "board tray" "board status" "board main" "board btns" "board score";
+    }
+    #scr-game .players { grid-area: players; }
+    #scr-game .frame { grid-area: board; }
+    #scr-game .tray { grid-area: tray; }
+    #scr-game .status { grid-area: status; min-height: 0; }
+    #scr-game #main { grid-area: main; }
+    #scr-game .btns { grid-area: btns; }
+    #scr-game .scorebox { grid-area: score; align-self: start; }
+  }
 </style>
 </head>
 <body>
@@ -191,9 +272,10 @@
         <li>Дубль даёт одну клетку и ещё один бросок.</li>
         <li>Три своих фишки подряд по горизонтали, вертикали или диагонали собирают линию.</li>
         <li>Вдвоём побеждает первая линия. Втроём и вчетвером линия даёт 1 очко, три фишки исчезают, игрок выходит. Последние двое играют финал до первой линии, и проигрывает тот, кто её не собрал.</li>
-        <li>Очередь ходов в каждой партии определяется жребием.</li>
+        <li>Очередь ходов в первой партии определяется жребием. В серии следующую партию начинает занявший последнее место, дальше очередь идёт к победителю.</li>
+        <li>Серия: партии идут подряд. Очки за место: 3, 2, 1, 0 (вчетвером), 2, 1, 0 (втроём), 1, 0 (вдвоём). Первое место у того, кто первым собрал линию, финалист-победитель идёт следом, проигравший последний.</li>
       </ul>
-      <p class="note">Приняты для этой версии: если оба действия невозможны, ход пропускается. Оставшиеся фишки вышедшего игрока остаются на поле, их можно снимать. В режиме «Пауза» после хода бота игра ждёт кнопку «Дальше».</p>
+      <p class="note">Приняты для этой версии: если оба действия невозможны, ход пропускается. Оставшиеся фишки вышедшего игрока по умолчанию тоже снимаются с поля (это можно отключить в настройках, тогда они остаются и их можно снимать). В режиме «Пауза» после хода бота игра ждёт кнопку «Дальше».</p>
     </details>
   </section>
 
@@ -201,11 +283,15 @@
   <section class="screen" id="scr-single" hidden>
     <h2>Однопользовательская</h2>
     <p class="st">Вы против ботов. Кто ходит первым, решает жребий.</p>
+    <div class="field"><label class="lg" for="sName">Ваше имя</label><input id="sName" class="txt" type="text" maxlength="12" autocomplete="nickname" placeholder="Синий"></div>
     <div class="field"><span class="lg" id="sColL">Ваш цвет</span><div class="colors" id="sColors" role="radiogroup" aria-labelledby="sColL"></div></div>
     <div class="field"><span class="lg" id="sBotsL">Ботов</span><div class="seg" id="sBots" role="radiogroup" aria-labelledby="sBotsL"></div></div>
     <div class="field"><span class="lg" id="sLvlL">Сложность</span><div class="seg modes" id="sLvl" role="radiogroup" aria-labelledby="sLvlL"></div></div>
     <div class="field"><span class="lg" id="sPaceL">Темп ботов</span><div class="seg modes" id="sPace" role="radiogroup" aria-labelledby="sPaceL"></div></div>
-    <p class="st">«Пауза»: после хода бота нажмите «Дальше». «Быстрый ход»: боты ходят сами.</p>
+    <p class="st">«Пауза»: после хода бота нажмите «Дальше». Остальные темпы: боты ходят сами, чем медленнее, тем легче уследить.</p>
+    <div class="field"><span class="lg" id="sGamesL">Партий</span><div class="seg modes" id="sGames" role="radiogroup" aria-labelledby="sGamesL"></div></div>
+    <p class="st">Серия: партии идут подряд, за места начисляются очки, счёт виден во время игры.</p>
+    <label class="chk" id="sCleanRow"><input type="checkbox" id="sClean" name="sclean" checked><span>Убирать оставшиеся фишки игрока, который вышел</span></label>
     <button class="btn" id="sStart" type="button">Начать игру</button>
     <button class="btn ghostbtn" id="sBack" type="button">Назад</button>
   </section>
@@ -219,8 +305,11 @@
     <div id="lBotOpts" class="screen">
       <div class="field"><span class="lg" id="lLvlL">Сложность</span><div class="seg modes" id="lLvl" role="radiogroup" aria-labelledby="lLvlL"></div></div>
       <div class="field"><span class="lg" id="lPaceL">Темп ботов</span><div class="seg modes" id="lPace" role="radiogroup" aria-labelledby="lPaceL"></div></div>
-      <p class="st">«Пауза»: после хода бота нажмите «Дальше». «Быстрый ход»: боты ходят сами.</p>
+      <p class="st">«Пауза»: после хода бота нажмите «Дальше». Остальные темпы: боты ходят сами, чем медленнее, тем легче уследить.</p>
     </div>
+    <div class="field"><span class="lg" id="lGamesL">Партий</span><div class="seg modes" id="lGames" role="radiogroup" aria-labelledby="lGamesL"></div></div>
+    <p class="st">Серия: партии идут подряд, за места начисляются очки, счёт виден во время игры.</p>
+    <label class="chk" id="lCleanRow"><input type="checkbox" id="lClean" name="lclean" checked><span>Убирать оставшиеся фишки игрока, который вышел</span></label>
     <p class="st" id="lSum"></p>
     <button class="btn" id="lStart" type="button">Начать игру</button>
     <button class="btn ghostbtn" id="lBack" type="button">Назад</button>
@@ -259,11 +348,15 @@
     </div>
 
     <div class="view" id="ov-lobby" hidden>
+      <div class="field"><label class="lg" for="lobName">Ваше имя</label><input id="lobName" class="txt" type="text" maxlength="12" autocomplete="nickname" placeholder="Имя"></div>
       <div id="lobPlayers"></div>
       <div class="field"><span class="lg" id="lobColL">Ваш цвет</span><div class="colors" id="lobColors" role="radiogroup" aria-labelledby="lobColL"></div></div>
       <div class="view" id="lobHost" hidden style="width:100%">
         <div class="field"><span class="lg" id="lobBotsL">Ботов</span><div class="seg" id="lobBots" role="radiogroup" aria-labelledby="lobBotsL"></div></div>
         <div class="field" id="lobLvlRow"><span class="lg" id="lobLvlL">Сложность</span><div class="seg modes" id="lobLvl" role="radiogroup" aria-labelledby="lobLvlL"></div></div>
+        <div class="field" id="lobPaceRow"><span class="lg" id="lobPaceL">Темп ботов</span><div class="seg modes" id="lobPace" role="radiogroup" aria-labelledby="lobPaceL"></div></div>
+        <div class="field"><span class="lg" id="lobGamesL">Партий</span><div class="seg modes" id="lobGames" role="radiogroup" aria-labelledby="lobGamesL"></div></div>
+        <label class="chk" id="lobCleanRow"><input type="checkbox" id="lobClean"><span>Убирать оставшиеся фишки игрока, который вышел</span></label>
       </div>
       <p class="st" id="lobSet" hidden></p>
       <p class="st" id="lobInfo"></p>
@@ -292,26 +385,41 @@
 
     <p class="status" id="status" aria-live="polite"></p>
     <button class="btn" id="main" type="button"></button>
-    <button class="btn ghostbtn" id="toMenu" type="button">В меню</button>
+    <div class="btns">
+      <button class="btn ghostbtn" id="endSer" type="button" hidden>Завершить серию</button>
+      <button class="btn ghostbtn" id="toMenu" type="button">В меню</button>
+    </div>
+    <section class="scorebox" id="score" hidden aria-label="Счёт серии"></section>
   </section>
 </main>
+
+<div class="banner" id="banner" hidden>
+  <div class="bcard" id="bcard" role="dialog" aria-modal="true" aria-live="polite"></div>
+</div>
 
 <script>
 (function () {
   var P = [
-    { name: 'Синие', gen: 'Синих', shape: 'circle' },
-    { name: 'Красные', gen: 'Красных', shape: 'square' },
-    { name: 'Жёлтые', gen: 'Жёлтых', shape: 'triangle' },
-    { name: 'Зелёные', gen: 'Зелёных', shape: 'diamond' }
+    { name: 'Синий', shape: 'circle' },
+    { name: 'Красный', shape: 'square' },
+    { name: 'Жёлтый', shape: 'triangle' },
+    { name: 'Зелёный', shape: 'diamond' }
   ];
   var LV = { easy: 'Лёгкий', normal: 'Обычный', hard: 'Сильный' };
   var LVOPTS = [['easy', 'Лёгкий'], ['normal', 'Обычный'], ['hard', 'Сильный']];
-  var PACEOPTS = [['pause', 'Пауза'], ['fast', 'Быстрый ход']];
+  var PACEOPTS = [['pause', 'Пауза'], ['slow', 'Медленно'], ['normal', 'Обычно'], ['fast', 'Быстро']];
+  var PACEON = PACEOPTS.slice(1);
+  var PACENAME = { pause: 'пауза', slow: 'медленно', normal: 'обычно', fast: 'быстро' };
+  var GAMEOPTS = [[1, 'Одна партия'], [3, '3 партии'], [5, '5 партий'], [10, '10 партий'], [0, 'Без лимита']];
+  var DELAY = { pause: 900, slow: 1500, normal: 950, fast: 550 };
   var PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+  var SKEYS = ['seats', 'names', 'np', 'order', 'board', 'active', 'cur', 'score', 'dice', 'cells', 'phase', 'over', 'last', 'mv', 'gone', 'places', 'ser', 'ev', 'nx', 'msg', 'halt'];
 
-  var S = null, rolling = false, timer = null, botTimer = null, level = 'normal', pace = 'pause';
+  var S = null, rolling = false, timer = null, botTimer = null, level = 'normal', pace = 'normal';
+  var cfg = { seats: ['x', 'x', 'x', 'x'], names: ['', '', '', ''], clean: true, games: 1 };
+  var evSeq = 0, seenEv = 0, bannerOpen = false, bannerT = null, nameSent = false;
   var role = 'local', mySeat = -1, conns = {}, owners = {}, gconn = null, gTimer = null;
-  var scr = 'menu', ostage = 'none', lastSeats = null, lobby = null, myId = 0, myColor = 0, leaveArm = false, leaveT = null;
+  var scr = 'menu', ostage = 'none', lobby = null, myId = 0, myColor = 0, leaveArm = false, leaveT = null;
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function $(id) { return document.getElementById(id); }
@@ -325,6 +433,17 @@
     }
     return a;
   }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
+  function cleanName(s) {
+    return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 12).trim();
+  }
+  function nm(c) { return (S && S.names && S.names[c]) || P[c].name; }
+  function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
 
   function shape(p, size, cls) {
     var st = 'fill="var(--p' + p + ')" stroke="var(--ink)" stroke-opacity=".28" stroke-width="3" stroke-linejoin="round"';
@@ -373,17 +492,44 @@
     rolling = false;
   }
 
+  /* names: empty -> colour name; duplicates get a number */
+  function uniqueNames(seats, names) {
+    var out = ['', '', '', ''], seen = {};
+    for (var c = 0; c < 4; c++) {
+      if (seats[c] === 'x') continue;
+      var base = cleanName(names[c]) || P[c].name, n = base, k = 2;
+      while (seen[n.toLowerCase()]) { n = base.slice(0, 10) + ' ' + k; k++; }
+      seen[n.toLowerCase()] = true;
+      out[c] = n;
+    }
+    return out;
+  }
+  function setCfg(seats, names, clean, games) {
+    cfg = { seats: seats.slice(), names: uniqueNames(seats, names), clean: !!clean, games: games };
+  }
+
   /* seats: array of 4 by colour, each 'h' (human here), 'r' (remote human), 'b' (bot) or 'x' (not playing) */
-  function newGame(seats) {
+  function startFresh() {
+    var ser = cfg.games === 1 ? null : { n: cfg.games, done: [], total: [0, 0, 0, 0], fin: false };
+    newGame(null, ser);
+  }
+  function startNext() {
+    newGame(S.places.slice().reverse(), S.ser);
+  }
+  function newGame(order, ser) {
     stopTimers();
-    var used = [];
+    var seats = cfg.seats, used = [];
     for (var i = 0; i < 4; i++) if (seats[i] !== 'x') used.push(i);
-    var order = shuffle(used.slice());
+    var fixed = !!order;
+    if (!order) order = shuffle(used.slice());
     S = {
-      seats: seats.slice(), np: used.length, order: order, board: new Array(36).fill(null), active: used.slice(),
-      cur: order[0], score: [0, 0, 0, 0], dice: null, cells: [], phase: 'roll', over: null, last: -1, hold: false, halt: false,
-      msg: 'Очередь по жребию: ' + order.map(function (c) { return P[c].name; }).join(', ') + '.'
+      seats: seats.slice(), names: cfg.names.slice(), clean: cfg.clean, np: used.length, order: order,
+      board: new Array(36).fill(null), active: used.slice(), cur: order[0], score: [0, 0, 0, 0], dice: null, cells: [],
+      phase: 'roll', over: null, last: -1, mv: null, gone: [], places: [], ser: ser, ev: null, nx: null,
+      hold: false, halt: false, msg: ''
     };
+    S.msg = (fixed ? 'Очередь по итогам прошлой партии: ' : 'Очередь по жребию: ') + order.map(function (c) { return nm(c); }).join(', ') + '.' +
+      (ser ? ' Партия ' + (ser.done.length + 1) + (ser.n ? ' из ' + ser.n : '') + '.' : '');
     render();
   }
 
@@ -411,15 +557,16 @@
   function roll() {
     if (S.phase !== 'roll' || rolling || S.over || S.halt) return;
     var a = rnd(), b = rnd();
+    S.gone = [];
     rolling = true;
-    if (reduce || (isBot(S.cur) && pace === 'fast')) { finishRoll(a, b); return; }
-    var n = 0;
+    if (reduce) { finishRoll(a, b); return; }
+    var n = 0, max = (isBot(S.cur) && pace === 'fast') ? 5 : 8;
     timer = setInterval(function () {
       if (!S) return;
       S.dice = [rnd(), rnd()];
       renderDice();
       renderButton();
-      if (++n >= 8) { clearInterval(timer); timer = null; finishRoll(a, b); }
+      if (++n >= max) { clearInterval(timer); timer = null; finishRoll(a, b); }
     }, 70);
     render();
   }
@@ -447,7 +594,7 @@
   function endTurn(dbl) {
     S.cells = [];
     if (dbl) {
-      S.msg += ' Дубль: ' + P[S.cur].name + ' бросают ещё раз.';
+      S.msg += ' Дубль: ' + nm(S.cur) + ' бросает ещё раз.';
     } else {
       S.cur = nextActive(S.cur);
     }
@@ -461,17 +608,20 @@
     if (validCells().indexOf(i) === -1) return;
     var p = S.cur, dbl = S.dice[0] === S.dice[1], msg;
     S.hold = isBot(p) && holdOn();
+    S.gone = [];
     if (S.board[i] === null) {
       S.board[i] = p;
       S.last = i;
+      S.mv = { i: i, k: 'put', c: p };
       var line = findLine(i, p);
       if (line) { finishLine(p, line); return; }
-      msg = P[p].name + ' поставили фишку на ' + lbl(i) + '.';
+      msg = nm(p) + ' ставит фишку на ' + lbl(i) + '.';
     } else {
       var o = S.board[i];
       S.board[i] = null;
       S.last = -1;
-      msg = P[p].name + ' сняли фишку ' + P[o].gen + ' с ' + lbl(i) + '.';
+      S.mv = { i: i, k: 'del', c: p };
+      msg = nm(p) + ' снимает фишку с ' + lbl(i) + ' (фишка: ' + nm(o) + ').';
     }
     S.msg = msg;
     endTurn(dbl);
@@ -482,21 +632,39 @@
     S.cells = [];
     S.dice = null;
     if (S.active.length === 2) {
-      var loser = S.active.filter(function (x) { return x !== p; })[0];
+      var loser = S.active.filter(function (x) { return x !== p; })[0], ser = S.ser;
+      S.places.push(p, loser);
       S.over = { winner: p, loser: loser, line: line };
       S.hold = false;
       S.phase = 'over';
+      if (ser) {
+        ser.done.push(S.places.slice());
+        S.places.forEach(function (c, k) { ser.total[c] += S.np - (k + 1); });
+        if (ser.n && ser.done.length >= ser.n) ser.fin = true;
+      }
       S.msg = S.np === 2
-        ? 'Победа: ' + P[p].name + ' собрали линию ' + lbl(line[0]) + ', ' + lbl(line[1]) + ', ' + lbl(line[2]) + '.'
-        : 'Финал окончен. ' + P[p].name + ' собрали линию, проигрывают ' + P[loser].name + '.';
+        ? 'Победа: ' + nm(p) + ' собирает линию ' + lbl(line[0]) + ', ' + lbl(line[1]) + ', ' + lbl(line[2]) + '.'
+        : 'Финал окончен. ' + nm(p) + ' собирает линию, проигрывает ' + nm(loser) + '.';
+      S.ev = { id: ++evSeq, k: 'end', c: S.places[0], np: S.np, res: S.places.slice(), g: ser ? ser.done.length : 0, n: ser ? ser.n : 0,
+        tot: ser ? ser.total.slice() : null, fin: !!(ser && ser.fin) };
     } else {
-      line.forEach(function (c) { S.board[c] = null; });
+      var place = S.places.length + 1;
+      S.places.push(p);
+      S.gone = [];
+      S.mv = null;
+      S.last = -1;
+      line.forEach(function (c) { S.board[c] = null; S.gone.push({ i: c, c: p, w: 1 }); });
+      if (S.clean) {
+        for (var k = 0; k < 36; k++) if (S.board[k] === p) { S.board[k] = null; S.gone.push({ i: k, c: p }); }
+      }
       S.active = S.active.filter(function (x) { return x !== p; });
       S.cur = nextActive(p);
       S.phase = 'roll';
-      S.msg = P[p].name + ' собрали линию: +1 очко, три фишки исчезают, ' + P[p].name + ' выходят из игры.';
+      S.ev = { id: ++evSeq, k: 'line', c: p, pl: place, pts: S.np - place, ser: !!S.ser, np: S.np };
+      S.msg = nm(p) + ' собирает линию и выходит из игры, ' + place + ' место' + (S.ser ? ' (+' + (S.np - place) + ').' : '.') +
+        (S.clean ? ' Все фишки игрока снимаются с поля.' : ' Три фишки линии исчезают.');
       if (S.active.length === 2) S.msg += ' Начался финал: первая линия решает.';
-      S.msg += ' Ходят ' + P[S.cur].name + '.';
+      S.msg += ' Ходит ' + nm(S.cur) + '.';
     }
     render();
   }
@@ -504,12 +672,26 @@
   function skip() {
     if (!S || S.phase !== 'skip' || S.halt) return;
     S.hold = isBot(S.cur) && holdOn();
-    S.msg = P[S.cur].name + ' пропускают ход.';
+    S.gone = [];
+    S.msg = nm(S.cur) + ' пропускает ход.';
     S.cur = nextActive(S.cur);
     S.cells = [];
     S.dice = null;
     S.phase = 'roll';
     render();
+  }
+
+  /* online series: host opens the next game, every remote player confirms */
+  function readyAll() {
+    if (!S || !S.nx) return false;
+    for (var c = 0; c < 4; c++) if (S.seats[c] === 'r' && !S.nx.ready[c]) return false;
+    return true;
+  }
+  function openNext() {
+    S.nx = { ready: [false, false, false, false] };
+    S.msg = 'Следующая партия: ждём, пока все игроки нажмут «Готов».';
+    render();
+    if (readyAll()) startNext();
   }
 
   /* ---------- Bots ---------- */
@@ -593,27 +775,34 @@
 
   function scheduleBot() {
     if (botTimer) { clearTimeout(botTimer); botTimer = null; }
-    if (!S || S.over || S.hold || S.halt || role === 'guest' || rolling || !isBot(S.cur)) return;
-    var delay = pace === 'fast' ? 450 : 900;
+    if (!S || S.over || S.hold || S.halt || role === 'guest' || rolling || bannerOpen || !isBot(S.cur)) return;
+    var delay = DELAY[pace] || 900;
     if (reduce) delay = 350;
     botTimer = setTimeout(function () { botTimer = null; botStep(); }, delay);
   }
 
   /* ---------- Rendering ---------- */
+  function placeOf(i) { return S.places.indexOf(i) + 1; }
+
   function renderPlayers() {
+    var ser = S.ser;
     $('players').innerHTML = S.order.map(function (i) {
       var out = S.active.indexOf(i) === -1;
       var isCur = i === S.cur && !S.over && !S.halt;
       var tag = '';
-      if (S.over && S.over.winner === i) tag = 'победа';
-      else if (S.over && S.over.loser === i) tag = 'проигрыш';
-      else if (out) tag = 'вышли';
-      else if (isCur) tag = 'ходят';
-      var who = S.seats[i] === 'b' ? 'бот' : (role === 'local' ? '' : (i === mySeat ? 'вы' : 'онлайн'));
+      if (S.over) {
+        var pl = placeOf(i);
+        if (S.nx && !S.halt) tag = S.seats[i] === 'r' ? (S.nx.ready[i] ? 'готов' : 'ждём') : 'готов';
+        else tag = S.np === 2 ? (pl === 1 ? 'победа' : 'проигрыш') : pl + ' место';
+      } else if (out) tag = placeOf(i) + ' место';
+      else if (isCur) tag = 'ходит';
+      var who = S.seats[i] === 'b' ? 'бот' : (role !== 'local' && i === mySeat ? 'вы' : '');
       if (who) tag = tag ? who + ' · ' + tag : who;
-      return '<li class="chip' + (isCur ? ' cur' : '') + (out ? ' out' : '') + '" style="--pc:var(--p' + i + ')"' +
-        (isCur ? ' aria-current="true"' : '') + '>' + shape(i, 22) + '<span class="nm">' + P[i].name + '</span>' +
-        '<span class="sc" aria-label="очков">' + S.score[i] + '</span><span class="tg">' + tag + '</span></li>';
+      var n = nm(i);
+      return '<li class="chip' + (isCur ? ' cur' : '') + (out && !S.over ? ' out' : '') + '" style="--pc:var(--p' + i + ')"' +
+        (isCur ? ' aria-current="true"' : '') + '>' + shape(i, 22) + '<span class="nm" title="' + esc(n) + '">' + esc(n) + '</span>' +
+        '<span class="sc" aria-label="' + (ser ? 'очков в серии' : 'линий') + '">' + (ser ? ser.total[i] : S.score[i]) + '</span>' +
+        '<span class="tg">' + esc(tag) + '</span></li>';
     }).join('');
   }
 
@@ -621,25 +810,37 @@
     var g = $('grid');
     g.style.setProperty('--pc', 'var(--p' + S.cur + ')');
     var showCand = (S.phase === 'choose' || S.phase === 'skip') && !S.over;
+    var gm = {};
+    (S.gone || []).forEach(function (x) { gm[x.i] = x; });
     var html = '';
     for (var i = 0; i < 36; i++) {
       var o = S.board[i];
       var isC = showCand && S.cells.indexOf(i) !== -1;
       var ok = isC && o !== S.cur;
-      var cls = 'cell';
+      var cls = 'cell', st = '';
       if (ok) cls += ' cand' + (o !== null ? ' remove' : '');
       else if (isC) cls += ' bad';
       var inWin = S.over && S.over.line.indexOf(i) !== -1;
-      if (inWin) cls += ' win';
+      if (inWin) { cls += ' win'; st += '--wc:var(--p' + S.over.winner + ');'; }
       var inner = '';
       if (o !== null) inner = shape(o, 0, i === S.last ? 'pop' : '');
       else if (ok) inner = shape(S.cur, 0, 'ghost');
-      var state = o === null ? 'свободна' : 'фишка: ' + P[o].name;
+      var gx = o === null ? gm[i] : null;
+      if (gx) {
+        inner = shape(gx.c, 0, 'vanish');
+        if (gx.w) { cls += ' win'; st += '--wc:var(--p' + gx.c + ');'; }
+      }
+      if (S.mv && S.mv.i === i) {
+        cls += ' lm' + (S.mv.k === 'del' ? ' lmd' : '');
+        st += '--mc:var(--p' + S.mv.c + ');';
+      }
+      var state = o === null ? 'свободна' : 'фишка: ' + esc(nm(o));
       var canClick = ok && S.phase === 'choose' && mine(S.cur);
       var aria = 'Ряд ' + (Math.floor(i / 6) + 1) + ', столбец ' + (i % 6 + 1) + ', ' + state +
+        (S.mv && S.mv.i === i ? ', последний ход' : '') +
         (canClick ? (o === null ? '. Поставить фишку' : '. Снять фишку') : '');
       html += '<button type="button" class="' + cls + '" data-i="' + i + '" aria-label="' + aria + '"' +
-        (canClick ? '' : ' disabled') + (inWin ? ' style="--wc:var(--p' + S.over.winner + ')"' : '') + '>' +
+        (canClick ? '' : ' disabled') + (st ? ' style="' + st + '"' : '') + '>' +
         (isC ? '<span class="tag">' + lbl(i) + '</span>' : '') + inner + '</button>';
     }
     g.innerHTML = html;
@@ -654,19 +855,130 @@
     }).join('');
   }
 
+  function mainState() {
+    if (S.halt) return ['Игра остановлена', true];
+    if (S.over) {
+      var ser = S.ser;
+      if (ser && !ser.fin) {
+        if (role === 'guest') return S.nx ? [S.nx.ready[mySeat] ? 'Не готов' : 'Готов', false] : ['Ждём хоста…', true];
+        if (role === 'host') return S.nx ? ['Ждём игроков…', true] : ['Продолжить', false];
+        return ['Следующая партия', false];
+      }
+      if (role === 'guest') return ['Ждём хоста…', true];
+      return [ser ? 'Новая серия' : 'Играть снова', false];
+    }
+    if (rolling) return ['Кубики летят…', true];
+    if (S.hold) return ['Дальше', false];
+    if (isBot(S.cur)) return ['Ходит бот…', true];
+    if (!mine(S.cur)) return ['Ходит ' + nm(S.cur) + '…', true];
+    if (S.phase === 'roll') return ['Бросить кубики', false];
+    if (S.phase === 'choose') return ['Выберите клетку на поле', true];
+    return ['Пропустить ход', false];
+  }
+
   function renderButton() {
-    var b = $('main'), t, dis = false;
-    if (S.halt) { t = 'Игра остановлена'; dis = true; }
-    else if (S.over) { t = role === 'guest' ? 'Ждём хоста…' : 'Играть снова'; dis = role === 'guest'; }
-    else if (rolling) { t = 'Кубики летят…'; dis = true; }
-    else if (S.hold) t = 'Дальше';
-    else if (isBot(S.cur)) { t = 'Ходит бот…'; dis = true; }
-    else if (!mine(S.cur)) { t = 'Ходят ' + P[S.cur].name + '…'; dis = true; }
-    else if (S.phase === 'roll') t = 'Бросить кубики';
-    else if (S.phase === 'choose') { t = 'Выберите клетку на поле'; dis = true; }
-    else t = 'Пропустить ход';
-    b.textContent = t;
-    b.disabled = dis;
+    var b = $('main'), m = mainState();
+    b.textContent = m[0];
+    b.disabled = m[1];
+  }
+
+  function renderScore() {
+    var box = $('score'), ser = S.ser;
+    box.hidden = !ser;
+    if (!ser) return;
+    var used = [0, 1, 2, 3].filter(function (c) { return S.seats[c] !== 'x'; });
+    var g = ser.done.length + 1;
+    var sub = ser.fin ? 'Серия окончена' : ((S.over ? 'Сыграна партия ' + ser.done.length : 'Идёт партия ' + g) + (ser.n ? ' из ' + ser.n : ''));
+    var mx = 0;
+    used.forEach(function (c) { if (ser.total[c] > mx) mx = ser.total[c]; });
+    var h = '<h3>Счёт серии</h3><p class="sm">' + sub + '. Очки за место: ' +
+      used.map(function (c, k) { return S.np - (k + 1); }).join(' / ') + '.</p>';
+    h += '<div class="sbody"><table class="stab"><thead><tr><th scope="col">№</th>' + used.map(function (c) {
+      return '<th scope="col" title="' + esc(nm(c)) + '">' + shape(c, 18) + esc(nm(c)) + '</th>';
+    }).join('') + '</tr></thead><tbody>';
+    ser.done.forEach(function (pl, k) {
+      h += '<tr><th scope="row">' + (k + 1) + '</th>' + used.map(function (c) { return '<td>' + (S.np - (pl.indexOf(c) + 1)) + '</td>'; }).join('') + '</tr>';
+    });
+    if (!S.over) h += '<tr class="cur"><th scope="row">' + g + '</th>' + used.map(function () { return '<td>…</td>'; }).join('') + '</tr>';
+    h += '</tbody><tfoot><tr><th scope="row">Итого</th>' + used.map(function (c) {
+      var lead = ser.done.length && ser.total[c] === mx;
+      return '<td' + (lead ? ' class="lead" style="--pc:var(--p' + c + ')"' : '') + '>' + ser.total[c] + '</td>';
+    }).join('') + '</tr></tfoot></table></div>';
+    box.innerHTML = h;
+  }
+
+  /* ----- full-screen banner (плашка) ----- */
+  function usedColors() { return [0, 1, 2, 3].filter(function (c) { return S.seats[c] !== 'x'; }); }
+  function leadersOf(tot) {
+    var cs = usedColors(), mx = -1;
+    cs.forEach(function (c) { if (tot[c] > mx) mx = tot[c]; });
+    return cs.filter(function (c) { return tot[c] === mx; });
+  }
+  function resRows(ev) {
+    return ev.res.map(function (c, k) {
+      return '<li><span class="rk">' + (k + 1) + '</span>' + shape(c, 24) + '<span class="rn">' + esc(nm(c)) + '</span><span class="rp">' +
+        (ev.tot ? '+' + (ev.np - (k + 1)) : '') + '</span></li>';
+    }).join('');
+  }
+  function totRows(ev) {
+    var cs = usedColors().sort(function (a, b) { return ev.tot[b] - ev.tot[a] || a - b; }), rank = 0, prev = null;
+    return cs.map(function (c, k) {
+      if (ev.tot[c] !== prev) { rank = k + 1; prev = ev.tot[c]; }
+      return '<li><span class="rk">' + rank + '</span>' + shape(c, 24) + '<span class="rn">' + esc(nm(c)) + '</span><span class="rp">' + ev.tot[c] + '</span></li>';
+    }).join('');
+  }
+  function bannerHTML(ev) {
+    var kick, hero = [ev.c], sub = '', body = '', fin = ev.k === 'ser' || !!ev.fin;
+    if (ev.k === 'line') {
+      kick = 'Линия!';
+      sub = 'Выходит из игры · ' + ev.pl + ' место' + (ev.ser ? ' · +' + ev.pts + ' оч.' : '');
+    } else {
+      kick = fin ? 'Серия окончена' : (ev.np === 2 && !ev.tot ? 'Победа!' : 'Партия окончена');
+      var parts = [];
+      if (fin) {
+        hero = leadersOf(ev.tot);
+        parts.push(hero.length > 1 ? 'Ничья по очкам' : ev.tot[hero[0]] + ' оч.');
+        parts.push('партий: ' + ev.g);
+      } else {
+        if (ev.np > 2 || ev.tot) parts.push('1 место');
+        if (ev.tot) parts.push('партия ' + ev.g + (ev.n ? ' из ' + ev.n : ''));
+        if (ev.np === 2 && !ev.tot) parts.push('линия собрана');
+      }
+      sub = parts.join(' · ');
+      if (ev.res) body += '<p class="bh">Результаты партии</p><ol class="bres">' + resRows(ev) + '</ol>';
+      if (ev.tot) body += '<p class="bh">Всего очков</p><ol class="bres">' + totRows(ev) + '</ol>';
+    }
+    return {
+      c: hero[0],
+      html: '<div class="bshape">' + hero.map(function (c) { return shape(c, hero.length > 1 ? 64 : 96); }).join('') + '</div>' +
+        '<p class="bk">' + kick + '</p><h2 class="bname">' + hero.map(function (c) { return esc(nm(c)); }).join(' и ') + '</h2>' +
+        (sub ? '<p class="bsub">' + esc(sub) + '</p>' : '') + body + '<button type="button" class="btn" id="bok">Ок</button>'
+    };
+  }
+  function showBanner(ev) {
+    var b = bannerHTML(ev), card = $('bcard');
+    card.innerHTML = b.html;
+    card.style.setProperty('--pc', 'var(--p' + b.c + ')');
+    $('banner').hidden = false;
+    bannerOpen = true;
+    if (bannerT) { clearTimeout(bannerT); bannerT = null; }
+    if (ev.k === 'line') bannerT = setTimeout(hideBanner, 2800);
+    if (botTimer) { clearTimeout(botTimer); botTimer = null; }
+    card.scrollTop = 0;
+    try { $('bok').focus({ preventScroll: true }); } catch (e) {}
+  }
+  function hideBanner() {
+    if (bannerT) { clearTimeout(bannerT); bannerT = null; }
+    if (!bannerOpen) return;
+    bannerOpen = false;
+    $('banner').hidden = true;
+    if (S) scheduleBot();
+  }
+  function maybeBanner() {
+    if (!S || !S.ev) { hideBanner(); return; }
+    if (S.ev.id === seenEv) return;
+    seenEv = S.ev.id;
+    showBanner(S.ev);
   }
 
   function render() {
@@ -675,17 +987,20 @@
     renderBoard();
     renderDice();
     renderButton();
+    renderScore();
     var finale = S.np > 2 && S.active.length === 2 && !S.over;
     if (S.halt) { $('turn').textContent = 'Игра остановлена'; $('where').textContent = ''; }
-    else if (S.over) { $('turn').textContent = 'Игра окончена'; $('where').textContent = ''; }
+    else if (S.over) { $('turn').textContent = S.ser && !S.ser.fin ? 'Партия окончена' : (S.ser ? 'Серия окончена' : 'Игра окончена'); $('where').textContent = ''; }
     else {
-      $('turn').textContent = 'Ход: ' + P[S.cur].name + (isBot(S.cur) ? ' (бот)' : '') + (finale ? ' (финал)' : '') +
+      $('turn').textContent = 'Ход: ' + nm(S.cur) + (isBot(S.cur) ? ' (бот)' : '') + (finale ? ' (финал)' : '') +
         (role !== 'local' && S.cur === mySeat ? ' (вы)' : '');
       $('where').textContent = (S.phase === 'choose' || S.phase === 'skip')
         ? (S.cells.length === 2 ? 'Клетки ' + lbl(S.cells[0]) + ' и ' + lbl(S.cells[1]) : 'Клетка ' + lbl(S.cells[0]) + ' (дубль)')
         : 'Ряд, затем столбец';
     }
     $('status').textContent = S.msg;
+    $('endSer').hidden = !(S.over && S.ser && !S.ser.fin && !S.ser.n && role !== 'guest' && !S.halt);
+    maybeBanner();
     scheduleBot();
     pushState();
   }
@@ -694,6 +1009,8 @@
   function showScreen(n) {
     ['menu', 'single', 'local', 'online', 'game'].forEach(function (k) { $('scr-' + k).hidden = k !== n; });
     scr = n;
+    var app = document.querySelector('.app');
+    if (app) app.classList.toggle('gaming', n === 'game');
     try { window.scrollTo(0, 0); } catch (e) {}
   }
   function onView(v) {
@@ -701,24 +1018,30 @@
   }
 
   /* Single */
-  var sc = { color: 0, bots: 1, level: 'normal', pace: 'pause' };
+  var sc = { color: 0, bots: 1, level: 'normal', pace: 'normal', games: 1, clean: true, name: '' };
   function renderSingle() {
     $('sColors').innerHTML = colorsHTML(sc.color, null);
     $('sBots').innerHTML = seg('sbots', [[1, '1'], [2, '2'], [3, '3']], sc.bots);
     $('sLvl').innerHTML = seg('slvl', LVOPTS, sc.level);
     $('sPace').innerHTML = seg('space', PACEOPTS, sc.pace);
+    $('sGames').innerHTML = seg('sgames', GAMEOPTS, sc.games);
+    $('sName').placeholder = P[sc.color].name;
+    $('sCleanRow').hidden = sc.bots < 2;
+    $('sClean').checked = sc.clean;
   }
   function startSingle() {
-    var seats = ['x', 'x', 'x', 'x'], k = sc.bots;
+    var seats = ['x', 'x', 'x', 'x'], names = ['', '', '', ''], k = sc.bots;
     seats[sc.color] = 'h';
+    names[sc.color] = sc.name;
     for (var c = 0; c < 4 && k > 0; c++) if (seats[c] === 'x') { seats[c] = 'b'; k--; }
-    level = sc.level; pace = sc.pace; role = 'local'; mySeat = -1; lastSeats = seats;
+    setCfg(seats, names, sc.clean, sc.games);
+    level = sc.level; pace = sc.pace; role = 'local'; mySeat = -1;
     showScreen('game');
-    newGame(seats);
+    startFresh();
   }
 
   /* Local */
-  var lc = { n: 3, kinds: ['h', 'h', 'b', 'b'], cols: [0, 1, 2, 3], level: 'normal', pace: 'pause' };
+  var lc = { n: 3, kinds: ['h', 'h', 'b', 'b'], cols: [0, 1, 2, 3], level: 'normal', pace: 'normal', games: 1, clean: true, names: ['', '', '', ''] };
   function renderLocal() {
     $('lN').innerHTML = seg('ln', [[2, '2'], [3, '3'], [4, '4']], lc.n);
     var html = '', bots = 0, hum = 0;
@@ -726,20 +1049,29 @@
       if (lc.kinds[i] === 'b') bots++; else hum++;
       html += '<div class="seatrow"><span class="nm">Место ' + (i + 1) + '</span>' +
         '<div class="seg modes" role="radiogroup" aria-label="Место ' + (i + 1) + ': кто играет">' + seg('lk' + i, [['h', 'Человек'], ['b', 'Бот']], lc.kinds[i]) + '</div>' +
-        '<div class="colors" data-seat="' + i + '" role="radiogroup" aria-label="Цвет места ' + (i + 1) + '">' + colorsHTML(lc.cols[i], null) + '</div></div>';
+        '<div class="colors" data-seat="' + i + '" role="radiogroup" aria-label="Цвет места ' + (i + 1) + '">' + colorsHTML(lc.cols[i], null) + '</div>' +
+        (lc.kinds[i] === 'h' ? '<input class="txt seatname" type="text" maxlength="12" data-seat="' + i + '" autocomplete="off" placeholder="Имя (' +
+          esc(P[lc.cols[i]].name) + ')" value="' + esc(lc.names[i]) + '" aria-label="Имя игрока, место ' + (i + 1) + '">' : '') + '</div>';
     }
     $('lSeats').innerHTML = html;
     $('lBotOpts').hidden = bots === 0;
     $('lLvl').innerHTML = seg('llvl', LVOPTS, lc.level);
     $('lPace').innerHTML = seg('lpace', PACEOPTS, lc.pace);
+    $('lGames').innerHTML = seg('lgames', GAMEOPTS, lc.games);
+    $('lCleanRow').hidden = lc.n < 3;
+    $('lClean').checked = lc.clean;
     $('lSum').textContent = hum === 0 ? 'Только боты: вы будете наблюдать за игрой.' : 'Людей: ' + hum + ', ботов: ' + bots + '.';
   }
   function startLocal() {
-    var seats = ['x', 'x', 'x', 'x'];
-    for (var i = 0; i < lc.n; i++) seats[lc.cols[i]] = lc.kinds[i];
-    level = lc.level; pace = lc.pace; role = 'local'; mySeat = -1; lastSeats = seats;
+    var seats = ['x', 'x', 'x', 'x'], names = ['', '', '', ''];
+    for (var i = 0; i < lc.n; i++) {
+      seats[lc.cols[i]] = lc.kinds[i];
+      if (lc.kinds[i] === 'h') names[lc.cols[i]] = lc.names[i];
+    }
+    setCfg(seats, names, lc.clean, lc.games);
+    level = lc.level; pace = lc.pace; role = 'local'; mySeat = -1;
     showScreen('game');
-    newGame(seats);
+    startFresh();
   }
 
   /* ---------- Online: WebRTC with manual code exchange, host runs the game ---------- */
@@ -827,15 +1159,27 @@
 
   function pushState() {
     if (role !== 'host' || !S || ostage !== 'game') return;
-    var msg = { t: 'state', s: {
-      seats: S.seats, np: S.np, order: S.order, board: S.board, active: S.active, cur: S.cur, score: S.score, dice: S.dice,
-      cells: S.cells, phase: S.phase, over: S.over, last: S.last, msg: S.msg, halt: !!S.halt, rolling: rolling
-    } };
+    var s = { rolling: rolling };
+    SKEYS.forEach(function (k) { s[k] = S[k]; });
+    var msg = { t: 'state', s: s };
     Object.keys(conns).forEach(function (k) { sendTo(k, msg); });
   }
 
   function remoteAction(slot, m) {
-    if (role !== 'host' || !S || ostage !== 'game' || S.over || S.halt || rolling || S.seats[S.cur] !== 'r' || owners[S.cur] !== slot) return;
+    if (role !== 'host' || !S || ostage !== 'game') return;
+    if (m.a === 'ready') {
+      if (S.over && S.nx && S.ser && !S.ser.fin && !S.halt) {
+        var col = -1;
+        Object.keys(owners).forEach(function (k) { if (owners[k] === slot) col = +k; });
+        if (col >= 0) {
+          S.nx.ready[col] = !S.nx.ready[col];
+          render();
+          if (readyAll()) startNext();
+        }
+      }
+      return;
+    }
+    if (S.over || S.halt || rolling || S.seats[S.cur] !== 'r' || owners[S.cur] !== slot) return;
     if (m.a === 'roll' && S.phase === 'roll') roll();
     else if (m.a === 'skip' && S.phase === 'skip') skip();
     else if (m.a === 'cell' && S.phase === 'choose' && typeof m.i === 'number') act(m.i);
@@ -922,7 +1266,7 @@
         var m;
         try { m = JSON.parse(e.data); } catch (x) { return; }
         if (m.t === 'act') remoteAction(i, m);
-        else if (m.t === 'pick' || m.t === 'ready') lobbyAction(i, m);
+        else if (m.t === 'pick' || m.t === 'ready' || m.t === 'name') lobbyAction(i, m);
         else if (m.t === 'bye') peerLost(i);
       };
       dc.onclose = function () { peerLost(i); };
@@ -961,10 +1305,10 @@
     if (c) c.ok = false;
     if (role !== 'host') return;
     if (ostage === 'game') {
-      if (S && !S.over && !S.halt) {
+      if (S && !S.halt && (!S.over || (S.ser && !S.ser.fin))) {
         var col = -1;
         Object.keys(owners).forEach(function (k) { if (owners[k] === i) col = +k; });
-        halt((col >= 0 ? P[col].name : 'Друг') + ' отключились. Игра остановлена.');
+        halt('Игрок ' + (col >= 0 ? nm(col) : 'онлайн') + ' отключился. ' + (S.over ? 'Серия остановлена.' : 'Игра остановлена.'));
       }
     } else if (ostage === 'lobby') {
       closeConn(i);
@@ -1019,6 +1363,10 @@
     if (role !== 'host' || ostage !== 'lobby' || !lobby) return;
     if (m.t === 'pick') pickColor(slot, +m.color);
     else if (m.t === 'ready') setReady(slot, !!m.v);
+    else if (m.t === 'name') {
+      var p = pl(slot);
+      if (p) { p.name = cleanName(m.name); lobbyChanged(); }
+    }
   }
 
   function renderLobby() {
@@ -1028,8 +1376,8 @@
     myColor = me.color;
     var human = lobby.players.length;
     var html = lobby.players.map(function (p) {
-      var nm = p.id === myId ? 'Вы' : (p.id === 0 ? 'Хост' : 'Друг ' + p.id);
-      return '<div class="lp">' + shape(p.color, 24) + '<span class="nm">' + nm + ' · ' + P[p.color].name + '</span>' +
+      var base = p.name || (p.id === 0 ? 'Хост' : 'Друг ' + p.id);
+      return '<div class="lp">' + shape(p.color, 24) + '<span class="nm">' + esc(base) + (p.id === myId ? ' (вы)' : '') + ' · ' + P[p.color].name + '</span>' +
         '<span class="rd' + (p.ready ? ' on' : '') + '">' + (p.ready ? 'готов' : 'выбирает') + '</span></div>';
     }).join('');
     var free = [0, 1, 2, 3].filter(function (c) { return lobby.players.every(function (p) { return p.color !== c; }); });
@@ -1038,7 +1386,7 @@
     }).join('');
     $('lobPlayers').innerHTML = html;
     $('lobColors').innerHTML = colorsHTML(me.color, takenColors(myId));
-    var isHost = role === 'host';
+    var isHost = role === 'host', total = human + lobby.bots;
     $('lobHost').hidden = !isHost;
     $('lobSet').hidden = isHost;
     if (isHost) {
@@ -1046,25 +1394,32 @@
       for (var k = 0; k <= 4 - human; k++) opts.push([k, String(k)]);
       $('lobBots').innerHTML = seg('lbots', opts, lobby.bots);
       $('lobLvl').innerHTML = seg('llob', LVOPTS, lobby.level);
+      $('lobPace').innerHTML = seg('lobpace', PACEON, lobby.pace);
+      $('lobGames').innerHTML = seg('lobgames', GAMEOPTS, lobby.games);
       $('lobLvlRow').hidden = lobby.bots === 0;
+      $('lobPaceRow').hidden = lobby.bots === 0;
+      $('lobCleanRow').hidden = total < 3;
+      $('lobClean').checked = lobby.clean;
     } else {
-      $('lobSet').textContent = 'Ботов: ' + lobby.bots + (lobby.bots ? ', сложность: ' + LV[lobby.level] : '') + '. Настройки меняет хост.';
+      var parts = ['Ботов: ' + lobby.bots + (lobby.bots ? ' (' + LV[lobby.level].toLowerCase() + ', темп: ' + PACENAME[lobby.pace] + ')' : '')];
+      parts.push(lobby.games === 1 ? 'одна партия' : (lobby.games ? 'серия из ' + lobby.games + ' партий' : 'серия без лимита'));
+      if (total >= 3) parts.push(lobby.clean ? 'фишки вышедшего убираются' : 'фишки вышедшего остаются');
+      $('lobSet').textContent = parts.join('; ') + '. Настройки меняет хост.';
     }
-    var total = human + lobby.bots;
     $('lobReady').textContent = me.ready ? 'Не готов' : 'Готов';
     $('lobReady').disabled = !me.ready && total < 2;
     $('lobInfo').textContent = total < 2
       ? 'Нужен хотя бы ещё один игрок. Хост может добавить бота.'
-      : 'Выберите цвет и нажмите «Готов». Игра начнётся, когда готовы все. Очередь определит жребий.';
+      : 'Введите имя, выберите цвет и нажмите «Готов». Игра начнётся, когда готовы все. Очередь определит жребий.';
   }
 
   function toLobby() {
-    var cols = [0, 1, 2, 3], players = [{ id: 0, color: 0, ready: false }];
+    var cols = [0, 1, 2, 3], players = [{ id: 0, color: 0, ready: false, name: cleanName($('lobName').value) }];
     cols.splice(0, 1);
     [1, 2, 3].forEach(function (i) {
-      if (slotUsed[i] && conns[i] && conns[i].ok) players.push({ id: i, color: cols.shift(), ready: false });
+      if (slotUsed[i] && conns[i] && conns[i].ok) players.push({ id: i, color: cols.shift(), ready: false, name: '' });
     });
-    lobby = { players: players, bots: 0, level: 'normal' };
+    lobby = { players: players, bots: 0, level: 'normal', pace: 'normal', games: 1, clean: true };
     myId = 0;
     ostage = 'lobby';
     onView('lobby');
@@ -1072,25 +1427,28 @@
   }
 
   function beginOnline() {
-    var seats = ['x', 'x', 'x', 'x'];
+    var seats = ['x', 'x', 'x', 'x'], names = ['', '', '', ''];
     owners = {};
     lobby.players.forEach(function (p) {
       if (p.id === 0) seats[p.color] = 'h';
       else { seats[p.color] = 'r'; owners[p.color] = p.id; }
+      names[p.color] = p.name || '';
     });
     var free = [0, 1, 2, 3].filter(function (c) { return seats[c] === 'x'; });
     for (var k = 0; k < lobby.bots; k++) seats[free[k]] = 'b';
+    setCfg(seats, names, lobby.clean, lobby.games);
     level = lobby.level;
-    pace = 'pause';
+    pace = lobby.pace || 'normal';
     mySeat = pl(0).color;
     ostage = 'game';
     showScreen('game');
-    newGame(seats);
+    startFresh();
   }
 
   function returnToLobby() {
     stopTimers();
     S = null;
+    hideBanner();
     lobby.players = lobby.players.filter(function (p) { return p.id === 0 || (conns[p.id] && conns[p.id].ok); });
     lobbyReset();
     clampBots();
@@ -1102,8 +1460,11 @@
 
   /* guest */
   function applyState(s) {
-    S = { seats: s.seats, np: s.np, order: s.order, board: s.board, active: s.active, cur: s.cur, score: s.score, dice: s.dice,
-      cells: s.cells, phase: s.phase, over: s.over, last: s.last, msg: s.msg, hold: false, halt: !!s.halt };
+    S = { hold: false };
+    SKEYS.forEach(function (k) { S[k] = s[k]; });
+    S.halt = !!s.halt;
+    S.gone = S.gone || [];
+    S.places = S.places || [];
     mySeat = myColor;
     ostage = 'game';
     if (scr !== 'game') showScreen('game');
@@ -1120,6 +1481,7 @@
     } else {
       closeGuest();
       lobby = null;
+      nameSent = false;
       ostage = 'conn';
       showScreen('online');
       onView('guest');
@@ -1139,6 +1501,11 @@
       lobby = m.lobby;
       myId = m.id;
       ostage = 'lobby';
+      if (!nameSent) {
+        nameSent = true;
+        var mine0 = cleanName($('lobName').value);
+        if (mine0) gsend({ t: 'name', name: mine0 });
+      }
       showScreen('online');
       onView('lobby');
       renderLobby();
@@ -1205,7 +1572,8 @@
     Object.keys(conns).forEach(function (k) { closeConn(+k); });
     closeGuest();
     stopTimers();
-    S = null; role = 'local'; mySeat = -1; ostage = 'none'; lobby = null; owners = {};
+    S = null; role = 'local'; mySeat = -1; ostage = 'none'; lobby = null; owners = {}; nameSent = false; seenEv = 0;
+    hideBanner();
     leaveArm = false;
     if (leaveT) { clearTimeout(leaveT); leaveT = null; }
     $('toMenu').textContent = 'В меню';
@@ -1219,6 +1587,17 @@
     for (var i = 1; i <= 6; i++) { c += '<span>' + i + '</span>'; r += '<span>' + i + '</span>'; }
     $('cols').innerHTML = c;
     $('rows').innerHTML = r;
+
+    // saved names
+    var saved = cleanName(lsGet('tvr-name'));
+    sc.name = saved;
+    $('sName').value = saved;
+    $('lobName').value = saved;
+    try {
+      var ln = JSON.parse(lsGet('tvr-lnames') || '[]');
+      if (Array.isArray(ln)) for (var q = 0; q < 4; q++) lc.names[q] = cleanName(ln[q]);
+    } catch (e) {}
+
     buildSlots();
     renderSingle();
     renderLocal();
@@ -1237,9 +1616,16 @@
     $('scr-single').addEventListener('change', function (e) {
       var t = e.target;
       if (!t || !t.name) return;
-      if (t.name === 'sbots') sc.bots = +t.value;
+      if (t.name === 'sbots') { sc.bots = +t.value; renderSingle(); }
       else if (t.name === 'slvl') sc.level = t.value;
       else if (t.name === 'space') sc.pace = t.value;
+      else if (t.name === 'sgames') sc.games = +t.value;
+      else if (t.name === 'sclean') sc.clean = t.checked;
+    });
+    $('sName').addEventListener('input', function () {
+      sc.name = cleanName(this.value);
+      lsSet('tvr-name', sc.name);
+      $('lobName').value = this.value;
     });
     $('sColors').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('button.col') : null;
@@ -1255,7 +1641,15 @@
       else if (/^lk\d$/.test(t.name)) lc.kinds[+t.name.slice(2)] = t.value;
       else if (t.name === 'llvl') { lc.level = t.value; return; }
       else if (t.name === 'lpace') { lc.pace = t.value; return; }
+      else if (t.name === 'lgames') { lc.games = +t.value; return; }
+      else if (t.name === 'lclean') { lc.clean = t.checked; return; }
       renderLocal();
+    });
+    $('lSeats').addEventListener('input', function (e) {
+      var t = e.target;
+      if (!t || !t.classList || !t.classList.contains('seatname')) return;
+      lc.names[+t.getAttribute('data-seat')] = cleanName(t.value);
+      lsSet('tvr-lnames', JSON.stringify(lc.names));
     });
     $('lSeats').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('button.col') : null;
@@ -1292,6 +1686,20 @@
       if (!t || role !== 'host' || !lobby) return;
       if (t.name === 'lbots') { lobby.bots = +t.value; lobbyReset(); lobbyChanged(); }
       else if (t.name === 'llob') { lobby.level = t.value; lobbyReset(); lobbyChanged(); }
+      else if (t.name === 'lobpace') { lobby.pace = t.value; lobbyReset(); lobbyChanged(); }
+      else if (t.name === 'lobgames') { lobby.games = +t.value; lobbyReset(); lobbyChanged(); }
+      else if (t.id === 'lobClean') { lobby.clean = t.checked; lobbyReset(); lobbyChanged(); }
+    });
+    $('lobName').addEventListener('input', function () {
+      var v = cleanName(this.value);
+      lsSet('tvr-name', v);
+      $('sName').value = this.value;
+      sc.name = v;
+      if (!lobby) return;
+      if (role === 'host') {
+        var me = pl(0);
+        if (me) { me.name = v; lobbyChanged(); }
+      } else gsend({ t: 'name', name: v });
     });
     $('lobColors').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('button.col') : null;
@@ -1317,12 +1725,27 @@
     $('main').addEventListener('click', function () {
       if (!S || S.halt) return;
       if (S.over) {
-        if (role === 'guest') return;
-        if (role === 'host') returnToLobby(); else newGame(lastSeats);
+        var ser = S.ser;
+        if (ser && !ser.fin) {
+          if (role === 'guest') { if (S.nx) sendAct('ready'); }
+          else if (role === 'host') { if (!S.nx) openNext(); }
+          else startNext();
+        } else {
+          if (role === 'guest') return;
+          if (role === 'host') returnToLobby(); else startFresh();
+        }
       } else if (S.hold) { S.hold = false; render(); }
       else if (!mine(S.cur)) return;
       else if (S.phase === 'roll') { if (role === 'guest') sendAct('roll'); else roll(); }
       else if (S.phase === 'skip') { if (role === 'guest') sendAct('skip'); else skip(); }
+    });
+    $('endSer').addEventListener('click', function () {
+      if (!S || !S.over || !S.ser || S.ser.fin || S.ser.n || role === 'guest' || S.halt) return;
+      S.ser.fin = true;
+      S.nx = null;
+      S.ev = { id: ++evSeq, k: 'ser', np: S.np, g: S.ser.done.length, n: 0, tot: S.ser.total.slice() };
+      S.msg = 'Серия завершена.';
+      render();
     });
     $('toMenu').addEventListener('click', function () {
       var b = $('toMenu');
@@ -1331,6 +1754,12 @@
       b.textContent = 'Выйти? Нажмите ещё раз';
       leaveT = setTimeout(function () { leaveArm = false; leaveT = null; b.textContent = 'В меню'; }, 3500);
     });
+
+    // banner
+    $('banner').addEventListener('click', function (e) {
+      if (e.target === $('banner') || (e.target.closest && e.target.closest('#bok'))) hideBanner();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideBanner(); });
 
     if (window.addEventListener) window.addEventListener('pagehide', function () {
       var bye = JSON.stringify({ t: 'bye' });
@@ -1346,5 +1775,3 @@
 </script>
 </body>
 </html>
-
-</body></html>
